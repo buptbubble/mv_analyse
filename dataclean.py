@@ -116,6 +116,81 @@ def loadToDf(filepath,sample=-1):
             else:
                 infoSet['l1_cost'].append(int(lineList[5 + refNum]))
 
+        if flag == 'L0':
+            if 'leftL0Roc' not in infoSet.keys():
+                infoSet['leftL0Roc'] = []
+            if 'leftL0MvX' not in infoSet.keys():
+                infoSet['leftL0MvX'] = []
+            if 'leftL0MvY' not in infoSet.keys():
+                infoSet['leftL0MvY'] = []
+            content = lineList[1]
+            content = content.replace(" ", "")
+            if content != 'none':
+               # print flag,lineList[1]
+                #print 'Line:',i
+                infoSet['leftL0Roc'].append(int(lineList[1]))
+                infoSet['leftL0MvX'].append(int(lineList[2]))
+                infoSet['leftL0MvY'].append(int(lineList[3]))
+            else:
+                infoSet['leftL0Roc'].append(-1)
+                infoSet['leftL0MvX'].append(-1)
+                infoSet['leftL0MvY'].append(-1)
+                
+        if flag == 'L1':
+            if 'leftL1Roc' not in infoSet.keys():
+                infoSet['leftL1Roc'] = []
+            if 'leftL1MvX' not in infoSet.keys():
+                infoSet['leftL1MvX'] = []
+            if 'leftL1MvY' not in infoSet.keys():
+                infoSet['leftL1MvY'] = []
+            content = lineList[1]
+            content = content.replace(" ", "")
+            if content != 'none':
+                infoSet['leftL1Roc'].append(int(lineList[1]))
+                infoSet['leftL1MvX'].append(int(lineList[2]))
+                infoSet['leftL1MvY'].append(int(lineList[3]))
+            else:
+                infoSet['leftL1Roc'].append(-1)
+                infoSet['leftL1MvX'].append(-1)
+                infoSet['leftL1MvY'].append(-1)
+                
+        if flag == 'A0':
+            if 'leftA0Roc' not in infoSet.keys():
+                infoSet['leftA0Roc'] = []
+            if 'leftA0MvX' not in infoSet.keys():
+                infoSet['leftA0MvX'] = []
+            if 'leftA0MvY' not in infoSet.keys():
+                infoSet['leftA0MvY'] = []
+            content = lineList[1]
+            content = content.replace(" ", "")
+            if content != 'none':
+                infoSet['leftA0Roc'].append(int(lineList[1]))
+                infoSet['leftA0MvX'].append(int(lineList[2]))
+                infoSet['leftA0MvY'].append(int(lineList[3]))
+            else:
+                infoSet['leftA0Roc'].append(-1)
+                infoSet['leftA0MvX'].append(-1)
+                infoSet['leftA0MvY'].append(-1)
+                
+        if flag == 'A1':
+            if 'leftA1Roc' not in infoSet.keys():
+                infoSet['leftA1Roc'] = []
+            if 'leftA1MvX' not in infoSet.keys():
+                infoSet['leftA1MvX'] = []
+            if 'leftA1MvY' not in infoSet.keys():
+                infoSet['leftA1MvY'] = []
+            content = lineList[1]
+            content = content.replace(" ", "")
+            if content != 'none':
+                infoSet['leftA1Roc'].append(int(lineList[1]))
+                infoSet['leftA1MvX'].append(int(lineList[2]))
+                infoSet['leftA1MvY'].append(int(lineList[3]))
+            else:
+                infoSet['leftA1Roc'].append(-1)
+                infoSet['leftA1MvX'].append(-1)
+                infoSet['leftA1MvY'].append(-1)
+
+
         if flag == '&':
             mergeInfoFlag = 1
             if 'merFlag' not in infoSet.keys():
@@ -164,9 +239,6 @@ def saveDataToFiles(filepath):
 
 
 if __name__ == '__main__':
-
-
-
     files = []
     for name in os.listdir(datapath):
         ext = os.path.splitext(name)[1]
