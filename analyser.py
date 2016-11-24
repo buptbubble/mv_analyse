@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*
+
 import os
 import pandas as pd
 import math
@@ -103,6 +105,10 @@ def biPredAnalyser(data,filepath):
     print 'LA Bi_Bi:', getFilterRate(dataLABi_Bi, dataLABi)
     print 'LA Bi_Uni:', getFilterRate(dataLABi_Uni, dataLABi)
 
+#选出当前mv与左边mv相同的数据
+    dataEqLeft = data[((data['l0_mvx'] == data['leftL0MvX']) & (data['l0_mvy'] == data['leftL0MvY']))| \
+          ((data['l1_mvx'] == data['leftL1MvY']) & (data['l1_mvy'] == data['leftL1MvY']) )]
+    print 'EqLeft:',getFilterRate(dataEqLeft,data)
 
 
 
