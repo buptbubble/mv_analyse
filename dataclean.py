@@ -53,12 +53,13 @@ def loadToDf(filepath,sample=-1):
         if flag == '#':
             if 'biType' not in infoSet.keys():
                 infoSet['biType'] = []
+            #比较过后选择单项预测
             if lineList[1] == 'uni':
                 infoSet['biType'].append('u')
-
+            #没有进行双向预测
             elif lineList[1] == 'non-Bi':
                 infoSet['biType'].append('m')
-
+            #双向预测和单项预测比较过后，选择双向预测
             elif lineList[1] == 'Bi':
                 infoSet['biType'].append('b')
 
