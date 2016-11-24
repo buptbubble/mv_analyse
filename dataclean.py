@@ -117,8 +117,8 @@ def loadToDf(filepath,sample=-1):
                 infoSet['l1_cost'].append(int(lineList[5 + refNum]))
 
         if flag == 'L0':
-            if 'leftL0Roc' not in infoSet.keys():
-                infoSet['leftL0Roc'] = []
+            if 'leftL0Poc' not in infoSet.keys():
+                infoSet['leftL0Poc'] = []
             if 'leftL0MvX' not in infoSet.keys():
                 infoSet['leftL0MvX'] = []
             if 'leftL0MvY' not in infoSet.keys():
@@ -128,17 +128,17 @@ def loadToDf(filepath,sample=-1):
             if content != 'none':
                # print flag,lineList[1]
                 #print 'Line:',i
-                infoSet['leftL0Roc'].append(int(lineList[1]))
+                infoSet['leftL0Poc'].append(int(lineList[1]))
                 infoSet['leftL0MvX'].append(int(lineList[2]))
                 infoSet['leftL0MvY'].append(int(lineList[3]))
             else:
-                infoSet['leftL0Roc'].append(-1)
+                infoSet['leftL0Poc'].append(-1)
                 infoSet['leftL0MvX'].append(-1)
                 infoSet['leftL0MvY'].append(-1)
                 
         if flag == 'L1':
-            if 'leftL1Roc' not in infoSet.keys():
-                infoSet['leftL1Roc'] = []
+            if 'leftL1Poc' not in infoSet.keys():
+                infoSet['leftL1Poc'] = []
             if 'leftL1MvX' not in infoSet.keys():
                 infoSet['leftL1MvX'] = []
             if 'leftL1MvY' not in infoSet.keys():
@@ -146,49 +146,49 @@ def loadToDf(filepath,sample=-1):
             content = lineList[1]
             content = content.replace(" ", "")
             if content != 'none':
-                infoSet['leftL1Roc'].append(int(lineList[1]))
+                infoSet['leftL1Poc'].append(int(lineList[1]))
                 infoSet['leftL1MvX'].append(int(lineList[2]))
                 infoSet['leftL1MvY'].append(int(lineList[3]))
             else:
-                infoSet['leftL1Roc'].append(-1)
+                infoSet['leftL1Poc'].append(-1)
                 infoSet['leftL1MvX'].append(-1)
                 infoSet['leftL1MvY'].append(-1)
                 
         if flag == 'A0':
-            if 'leftA0Roc' not in infoSet.keys():
-                infoSet['leftA0Roc'] = []
-            if 'leftA0MvX' not in infoSet.keys():
-                infoSet['leftA0MvX'] = []
-            if 'leftA0MvY' not in infoSet.keys():
-                infoSet['leftA0MvY'] = []
+            if 'aboveL0Poc' not in infoSet.keys():
+                infoSet['aboveL0Poc'] = []
+            if 'aboveL0MvX' not in infoSet.keys():
+                infoSet['aboveL0MvX'] = []
+            if 'aboveL0MvY' not in infoSet.keys():
+                infoSet['aboveL0MvY'] = []
             content = lineList[1]
             content = content.replace(" ", "")
             if content != 'none':
-                infoSet['leftA0Roc'].append(int(lineList[1]))
-                infoSet['leftA0MvX'].append(int(lineList[2]))
-                infoSet['leftA0MvY'].append(int(lineList[3]))
+                infoSet['aboveL0Poc'].append(int(lineList[1]))
+                infoSet['aboveL0MvX'].append(int(lineList[2]))
+                infoSet['aboveL0MvY'].append(int(lineList[3]))
             else:
-                infoSet['leftA0Roc'].append(-1)
-                infoSet['leftA0MvX'].append(-1)
-                infoSet['leftA0MvY'].append(-1)
+                infoSet['aboveL0Poc'].append(-1)
+                infoSet['aboveL0MvX'].append(-1)
+                infoSet['aboveL0MvY'].append(-1)
                 
         if flag == 'A1':
-            if 'leftA1Roc' not in infoSet.keys():
-                infoSet['leftA1Roc'] = []
-            if 'leftA1MvX' not in infoSet.keys():
-                infoSet['leftA1MvX'] = []
-            if 'leftA1MvY' not in infoSet.keys():
-                infoSet['leftA1MvY'] = []
+            if 'aboveL1Poc' not in infoSet.keys():
+                infoSet['aboveL1Poc'] = []
+            if 'aboveL1MvX' not in infoSet.keys():
+                infoSet['aboveL1MvX'] = []
+            if 'aboveL1MvY' not in infoSet.keys():
+                infoSet['aboveL1MvY'] = []
             content = lineList[1]
             content = content.replace(" ", "")
             if content != 'none':
-                infoSet['leftA1Roc'].append(int(lineList[1]))
-                infoSet['leftA1MvX'].append(int(lineList[2]))
-                infoSet['leftA1MvY'].append(int(lineList[3]))
+                infoSet['aboveL1Poc'].append(int(lineList[1]))
+                infoSet['aboveL1MvX'].append(int(lineList[2]))
+                infoSet['aboveL1MvY'].append(int(lineList[3]))
             else:
-                infoSet['leftA1Roc'].append(-1)
-                infoSet['leftA1MvX'].append(-1)
-                infoSet['leftA1MvY'].append(-1)
+                infoSet['aboveL1Poc'].append(-1)
+                infoSet['aboveL1MvX'].append(-1)
+                infoSet['aboveL1MvY'].append(-1)
 
 
         if flag == '&':
