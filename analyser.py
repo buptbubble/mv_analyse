@@ -5,7 +5,7 @@ import pandas as pd
 import math
 from matplotlib import pyplot as plt
 
-datapath = '.\data'
+datapath = '.\data\costdata'
 
 def getFilterRate(df1,df2):
     rate = df1.shape[0]*1.0/df2.shape[0]
@@ -108,17 +108,43 @@ def biPredAnalyser(data,filepath):
 #选出当前mv与左边mv相同的数据
     dataEqLeft = data[((data['l0_mvx'] == data['leftL0MvX']) & (data['l0_mvy'] == data['leftL0MvY']))| \
           ((data['l1_mvx'] == data['leftL1MvY']) & (data['l1_mvy'] == data['leftL1MvY']) )]
+    dataEqAbove = data[((data['l0_mvx'] == data['aboveL0MvX']) & (data['l0_mvy'] == data['aboveL0MvY'])) | \
+                      ((data['l1_mvx'] == data['aboveL1MvY']) & (data['l1_mvy'] == data['aboveL1MvY']))]
     print 'EqLeft:',getFilterRate(dataEqLeft,data)
+    print 'EqAbove:', getFilterRate(dataEqAbove, data)
 
 
+
+def mergeCostAnalyser(df,filepath):
+    data_notmerge = df[(df['NormalMC'] == 1) & (df['merFlag'] == 0) & (df['mergeCost'] >=0)]
+    data_merge = df[(df['NormalMC'] == 1) & (df['merFlag'] == 1) & (df['mergeCost'] >= 0)]
+
+
+    data_nm_mCost = data_notmerge['mergeCost']
+    data_m_mCost = data_merge['mergeCost']
+
+    p1 = plt.subplot(211)
+    p1.hist(data_m_mCost, bins=50,range=(0,500))
+    p1.set_title(filepath + '\n'+'Merge')
+
+    p2 = plt.subplot(212)
+    p2.hist(data_nm_mCost, bins=50,range=(0,500))
+    p2.set_title('Not Merge')
+    p2.set_xlabel('MV Diffence')
+    p2.set_ylabel('Hits')
+    plt.show()
 
 if __name__ == "__main__":
     #cusize = [8,16,32,64]
-    cusize = [16]
+    cusize = [8]
     for size in cusize:
         print 'current size:',size
         for df,filepath in loadDataBySize(size):
-            #mergeAnalyser(df,filepath)
-            biPredAnalyser(df,filepath)
-            break
+            mergeCostAnalyser(df,filepath)
+
+
+
+
+
+
 

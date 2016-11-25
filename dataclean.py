@@ -231,14 +231,6 @@ def saveDataToFiles(filepath):
 
 
 
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     files = []
     for name in os.listdir(datapath):
