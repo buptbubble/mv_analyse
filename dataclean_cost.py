@@ -96,6 +96,43 @@ def loadToDf(filepath,sample=-1):
                 infoSet['merFlag'].append(1)
             else:
                 infoSet['merFlag'].append(0)
+        if flag == "N":
+            if 'leftExist' not in infoSet.keys():
+                infoSet['leftExist'] = []
+                infoSet['leftExist'].append(int(lineList[1]))
+            else:
+                infoSet['leftExist'].append(int(lineList[1]))
+
+            if 'leftCost' not in infoSet.keys():
+                infoSet['leftCost'] = []
+                infoSet['leftCost'].append(int(lineList[2]))
+            else:
+                infoSet['leftCost'].append(int(lineList[2]))
+
+            if 'leftMerge' not in infoSet.keys():
+                infoSet['leftMerge'] = []
+                infoSet['leftMerge'].append(int(lineList[3]))
+            else:
+                infoSet['leftMerge'].append(int(lineList[3]))
+
+            if 'rightExist' not in infoSet.keys():
+                infoSet['rightExist'] = []
+                infoSet['rightExist'].append(int(lineList[4]))
+            else:
+                infoSet['rightExist'].append(int(lineList[4]))
+
+            if 'rightCost' not in infoSet.keys():
+                infoSet['rightCost'] = []
+                infoSet['rightCost'].append(int(lineList[5]))
+            else:
+                infoSet['rightCost'].append(int(lineList[5]))
+
+            if 'rightMerge' not in infoSet.keys():
+                infoSet['rightMerge'] = []
+                infoSet['rightMerge'].append(int(lineList[6]))
+            else:
+                infoSet['rightMerge'].append(int(lineList[6]))
+
     feaLen = []
     for key in infoSet.keys():
         feaLen.append(len(infoSet[key]))
