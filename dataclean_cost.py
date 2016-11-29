@@ -115,23 +115,23 @@ def loadToDf(filepath,sample=-1):
             else:
                 infoSet['leftMerge'].append(int(lineList[3]))
 
-            if 'rightExist' not in infoSet.keys():
-                infoSet['rightExist'] = []
-                infoSet['rightExist'].append(int(lineList[4]))
+            if 'aboveExist' not in infoSet.keys():
+                infoSet['aboveExist'] = []
+                infoSet['aboveExist'].append(int(lineList[4]))
             else:
-                infoSet['rightExist'].append(int(lineList[4]))
+                infoSet['aboveExist'].append(int(lineList[4]))
 
-            if 'rightCost' not in infoSet.keys():
-                infoSet['rightCost'] = []
-                infoSet['rightCost'].append(int(lineList[5]))
+            if 'aboveCost' not in infoSet.keys():
+                infoSet['aboveCost'] = []
+                infoSet['aboveCost'].append(int(lineList[5]))
             else:
-                infoSet['rightCost'].append(int(lineList[5]))
+                infoSet['aboveCost'].append(int(lineList[5]))
 
-            if 'rightMerge' not in infoSet.keys():
-                infoSet['rightMerge'] = []
-                infoSet['rightMerge'].append(int(lineList[6]))
+            if 'aboveMerge' not in infoSet.keys():
+                infoSet['aboveMerge'] = []
+                infoSet['aboveMerge'].append(int(lineList[6]))
             else:
-                infoSet['rightMerge'].append(int(lineList[6]))
+                infoSet['aboveMerge'].append(int(lineList[6]))
 
     feaLen = []
     for key in infoSet.keys():

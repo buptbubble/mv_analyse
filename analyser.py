@@ -134,13 +134,82 @@ def mergeCostAnalyser(df,filepath):
     p2.set_ylabel('Hits')
     plt.show()
 
+def neighborAnalyser(df,filepath):
+    print '\n'
+    print 'Assuming left CU is merge mode:'
+    for partsize in range(4):
+        df_leftMerge_Normal = df[(df['NormalMC'] == 1) & (df['leftMerge'] == 1) & (df['ps'] == partsize)]
+        df_Normal = df[(df['NormalMC'] == 1) & (df['ps'] == partsize)]
+
+
+        if df_leftMerge_Normal.shape[0] == 0:
+            print 'PartSize=',partsize,' None.'
+            continue
+        assert df_leftMerge_Normal.shape[0]!=0
+        dfMerge_leftM = df_leftMerge_Normal[df_leftMerge_Normal['merFlag']==1]
+        dfMerge_Normal = df_Normal[df_Normal['merFlag']==1]
+        rate_LMerge = getFilterRate(dfMerge_leftM,df_leftMerge_Normal)
+        rate_Merge = getFilterRate(dfMerge_Normal,df_Normal)
+        rate_filter = getFilterRate(df_leftMerge_Normal, df_Normal)
+        print 'PartSize:', partsize
+        print '\trate_LMerge:',rate_LMerge
+        print '\trate_Merge:', rate_Merge
+        print '\tFilter rate:',rate_filter
+
+    print '\n'
+    print 'Assuming above CU is merge mode:'
+    for partsize in range(4):
+        df_rightMerge_Normal = df[(df['NormalMC'] == 1) & (df['rightMerge'] == 1) & (df['ps'] == partsize)]
+        df_Normal = df[(df['NormalMC'] == 1) & (df['ps'] == partsize)]
+
+        if df_rightMerge_Normal.shape[0] == 0:
+            print 'PartSize=:', partsize, ' None.'
+            continue
+        assert df_rightMerge_Normal.shape[0] != 0
+        dfMerge_rightM = df_rightMerge_Normal[df_rightMerge_Normal['merFlag'] == 1]
+        dfMerge_Normal = df_Normal[df_Normal['merFlag'] == 1]
+        rate_AMerge = getFilterRate(dfMerge_rightM, df_rightMerge_Normal)
+        rate_Merge = getFilterRate(dfMerge_Normal, df_Normal)
+        rate_filter = getFilterRate(df_rightMerge_Normal, df_Normal)
+        print 'PartSize:', partsize
+        print '\trate_AMerge:', rate_AMerge
+        print '\trate_Merge:', rate_Merge
+        print '\tFilter rate:', rate_filter
+
+    print '\n'
+    print 'Assuming both above and left CU is merge mode:'
+    for partsize in range(4):
+        df_LAMerge_Normal = df[(df['NormalMC'] == 1) & (df['rightMerge'] == 1)&(df['leftMerge'] == 1) & (df['ps'] == partsize)]
+        df_Normal = df[(df['NormalMC'] == 1) & (df['ps'] == partsize)]
+
+        if df_LAMerge_Normal.shape[0] == 0:
+            print 'PartSize=:', partsize, ' None.'
+            continue
+
+        dfMerge_LAMerge = df_LAMerge_Normal[df_LAMerge_Normal['merFlag'] == 1]
+        dfMerge_Normal = df_Normal[df_Normal['merFlag'] == 1]
+        rate_LAMerge = getFilterRate(dfMerge_LAMerge, df_LAMerge_Normal)
+        rate_Merge = getFilterRate(dfMerge_Normal, df_Normal)
+        rate_filter = getFilterRate(df_LAMerge_Normal, df_Normal)
+        print 'PartSize:', partsize
+        print '\trate_LAMerge:', rate_LAMerge
+        print '\trate_Merge:', rate_Merge
+        print '\tFilter rate:', rate_filter
+
+
+
+    def neighborCostAnalyser(df,filepath):
+        pass
+
 if __name__ == "__main__":
     #cusize = [8,16,32,64]
-    cusize = [8]
+    cusize = [32]
     for size in cusize:
         print 'current size:',size
         for df,filepath in loadDataBySize(size):
-            mergeCostAnalyser(df,filepath)
+            #mergeCostAnalyser(df,filepath)
+            neighborAnalyser(df, filepath)
+
 
 
 
