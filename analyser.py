@@ -4,10 +4,12 @@ import os
 import pandas as pd
 import math
 from matplotlib import pyplot as plt
+import copy
 
 datapath = '.\data\costdata'
+picsfolder = '.\pics'
 
-def getFilterRate(df1,df2):
+def getRatio(df1, df2):
     rate = df1.shape[0]*1.0/df2.shape[0]
     return rate
 
@@ -24,9 +26,10 @@ def loadDataBySize(cusize = 8):
     for path in paths:
 
         filepath = os.path.join(path,filename)
-        print filepath
-        filesize = os.path.getsize(filepath)/1024 ** 2
-        print 'Filesize:',filesize,'MB'
+        filepathC = filepath.split('\\')
+        seqName = filepathC[-2]
+        filesize = os.path.getsize(filepath) / 1024 ** 2
+        print 'Seq.Name:',seqName,'\tCU Width:',cusize,'\tFilesize:',filesize,'MB'
         df = pd.read_csv(filepath,index_col=0)
         yield df,filepath
 
@@ -80,38 +83,38 @@ def mergeAnalyser(data,filepath):
 def biPredAnalyser(data,filepath):
     dataUni = data[data['biType'] =='u']
     dataBi = data[data['biType'] == 'b']
-    print 'Bi rate total:',getFilterRate(dataBi,data)
+    print 'Bi rate total:',getRatio(dataBi, data)
 
     dataLeftBi = data[(data['leftL0Poc']!=-1) & (data['leftL1Poc']!=-1)]
-    print 'Left Bi rate:', getFilterRate(dataLeftBi, data)
+    print 'Left Bi rate:', getRatio(dataLeftBi, data)
     dataAboveBi = data[(data['aboveL0Poc']!=-1) & (data['aboveL1Poc']!=-1)]
-    print 'Above Bi rate:', getFilterRate(dataAboveBi, data)
+    print 'Above Bi rate:', getRatio(dataAboveBi, data)
     dataLABi = data[(data['leftL0Poc']!=-1) & (data['leftL1Poc']!=-1) & (data['aboveL0Poc']!=-1) & (data['aboveL1Poc']!=-1)]
-    print 'Left Above Bi rate:',getFilterRate(dataLABi,data)
+    print 'Left Above Bi rate:',getRatio(dataLABi, data)
     print '-------------------------------'
 
     dataAboveBi_Bi = dataAboveBi[dataAboveBi['biType'] == 'b']
     dataAboveBi_Uni = dataAboveBi[dataAboveBi['biType'] == 'u']
-    print 'AboveBi_Bi:',getFilterRate(dataAboveBi_Bi,dataAboveBi)
-    print 'AboveBi_Uni:',getFilterRate(dataAboveBi_Uni,dataAboveBi)
+    print 'AboveBi_Bi:',getRatio(dataAboveBi_Bi, dataAboveBi)
+    print 'AboveBi_Uni:',getRatio(dataAboveBi_Uni, dataAboveBi)
 
     dataLeftBi_Bi = dataLeftBi[dataLeftBi['biType'] == 'b']
     dataLeftBi_Uni = dataLeftBi[dataLeftBi['biType'] == 'u']
-    print 'LeftBi_Bi:', getFilterRate(dataLeftBi_Bi, dataLeftBi)
-    print 'LeftBi_Uni:', getFilterRate(dataLeftBi_Uni, dataLeftBi)
+    print 'LeftBi_Bi:', getRatio(dataLeftBi_Bi, dataLeftBi)
+    print 'LeftBi_Uni:', getRatio(dataLeftBi_Uni, dataLeftBi)
 
     dataLABi_Bi = dataLABi[dataLABi['biType'] == 'b']
     dataLABi_Uni = dataLABi[dataLABi['biType'] == 'u']
-    print 'LA Bi_Bi:', getFilterRate(dataLABi_Bi, dataLABi)
-    print 'LA Bi_Uni:', getFilterRate(dataLABi_Uni, dataLABi)
+    print 'LA Bi_Bi:', getRatio(dataLABi_Bi, dataLABi)
+    print 'LA Bi_Uni:', getRatio(dataLABi_Uni, dataLABi)
 
 #选出当前mv与左边mv相同的数据
     dataEqLeft = data[((data['l0_mvx'] == data['leftL0MvX']) & (data['l0_mvy'] == data['leftL0MvY']))| \
           ((data['l1_mvx'] == data['leftL1MvY']) & (data['l1_mvy'] == data['leftL1MvY']) )]
     dataEqAbove = data[((data['l0_mvx'] == data['aboveL0MvX']) & (data['l0_mvy'] == data['aboveL0MvY'])) | \
                       ((data['l1_mvx'] == data['aboveL1MvY']) & (data['l1_mvy'] == data['aboveL1MvY']))]
-    print 'EqLeft:',getFilterRate(dataEqLeft,data)
-    print 'EqAbove:', getFilterRate(dataEqAbove, data)
+    print 'EqLeft:',getRatio(dataEqLeft, data)
+    print 'EqAbove:', getRatio(dataEqAbove, data)
 
 
 
@@ -148,9 +151,9 @@ def neighborAnalyser(df,filepath):
         assert df_leftMerge_Normal.shape[0]!=0
         dfMerge_leftM = df_leftMerge_Normal[df_leftMerge_Normal['merFlag']==1]
         dfMerge_Normal = df_Normal[df_Normal['merFlag']==1]
-        rate_LMerge = getFilterRate(dfMerge_leftM,df_leftMerge_Normal)
-        rate_Merge = getFilterRate(dfMerge_Normal,df_Normal)
-        rate_filter = getFilterRate(df_leftMerge_Normal, df_Normal)
+        rate_LMerge = getRatio(dfMerge_leftM, df_leftMerge_Normal)
+        rate_Merge = getRatio(dfMerge_Normal, df_Normal)
+        rate_filter = getRatio(df_leftMerge_Normal, df_Normal)
         print 'PartSize:', partsize
         print '\trate_LMerge:',rate_LMerge
         print '\trate_Merge:', rate_Merge
@@ -168,9 +171,9 @@ def neighborAnalyser(df,filepath):
         assert df_rightMerge_Normal.shape[0] != 0
         dfMerge_rightM = df_rightMerge_Normal[df_rightMerge_Normal['merFlag'] == 1]
         dfMerge_Normal = df_Normal[df_Normal['merFlag'] == 1]
-        rate_AMerge = getFilterRate(dfMerge_rightM, df_rightMerge_Normal)
-        rate_Merge = getFilterRate(dfMerge_Normal, df_Normal)
-        rate_filter = getFilterRate(df_rightMerge_Normal, df_Normal)
+        rate_AMerge = getRatio(dfMerge_rightM, df_rightMerge_Normal)
+        rate_Merge = getRatio(dfMerge_Normal, df_Normal)
+        rate_filter = getRatio(df_rightMerge_Normal, df_Normal)
         print 'PartSize:', partsize
         print '\trate_AMerge:', rate_AMerge
         print '\trate_Merge:', rate_Merge
@@ -188,9 +191,9 @@ def neighborAnalyser(df,filepath):
 
         dfMerge_LAMerge = df_LAMerge_Normal[df_LAMerge_Normal['merFlag'] == 1]
         dfMerge_Normal = df_Normal[df_Normal['merFlag'] == 1]
-        rate_LAMerge = getFilterRate(dfMerge_LAMerge, df_LAMerge_Normal)
-        rate_Merge = getFilterRate(dfMerge_Normal, df_Normal)
-        rate_filter = getFilterRate(df_LAMerge_Normal, df_Normal)
+        rate_LAMerge = getRatio(dfMerge_LAMerge, df_LAMerge_Normal)
+        rate_Merge = getRatio(dfMerge_Normal, df_Normal)
+        rate_filter = getRatio(df_LAMerge_Normal, df_Normal)
         print 'PartSize:', partsize
         print '\trate_LAMerge:', rate_LAMerge
         print '\trate_Merge:', rate_Merge
@@ -198,17 +201,64 @@ def neighborAnalyser(df,filepath):
 
 
 
-    def neighborCostAnalyser(df,filepath):
-        pass
+def neighborCostAnalyser(df,filepath):
+    df_LAexist = df[(df['NormalMC'] == 1) & (df['leftExist'] == 1) & (df['rightExist'] == 1) &(df['mergeCost'] != -1)]
+    templist = copy.deepcopy(list(((df_LAexist['leftCost']+df_LAexist['rightCost'])/2).values))
+    df_LAexist['aveLAcost'] = templist
+
+    df_totalMerge = df_LAexist[df_LAexist['merFlag']==1]
+
+    mergedRatioList = []
+    precisionRatioList = []
+    recallRatioList = []
+    multiFactorList = []
+
+    cusize = df.loc[0]['cusize']
+    seqName = filepath.split('\\')[-2]
+    for step in range(20):
+        multiFactor = 0.5+0.1*step
+        multiFactorList.append(multiFactor)
+        df_costLessLA = df_LAexist[df_LAexist['mergeCost'] < multiFactor * df_LAexist['aveLAcost']]
+        df_realMerge = df_costLessLA[df_costLessLA['merFlag'] == 1]
+
+        rate = getRatio(df_LAexist, df)
+        # print rate,'\tLeft and right are exist, current merge cost != -1, process normal'
+
+        mergedRatio = getRatio(df_costLessLA, df)
+        mergedRatioList.append(mergedRatio)
+        precisionRatio= getRatio(df_realMerge, df_costLessLA)
+        precisionRatioList.append(precisionRatio)
+        recallRatio = getRatio(df_realMerge,df_totalMerge)
+        recallRatioList.append(recallRatio)
+    plt.figure()
+    plt.plot(multiFactorList,precisionRatioList,'r-',label= 'Precision Ratio')
+    plt.plot(multiFactorList,recallRatioList,'g-',label='Recall Ratio')
+    plt.plot(multiFactorList,mergedRatioList,'b-',label='Merged Block')
+    titleText = seqName+'   width='+str(cusize)
+    savename = seqName+str(cusize)+'.png'
+
+    plt.title(titleText)
+    plt.legend()
+    plt.savefig(os.path.join(picsfolder, savename))
+
+
+
+    # print mergedRatio, '\tTotal merged block'
+    # print precisionRatio,'\tPrecision ratio'
+    # print recallRatio,'\tRecall ratio'
+
+
+    pass
 
 if __name__ == "__main__":
-    #cusize = [8,16,32,64]
-    cusize = [32]
+    cusize = [8,16,32,64]
+    #cusize = [32]
     for size in cusize:
         print 'current size:',size
         for df,filepath in loadDataBySize(size):
             #mergeCostAnalyser(df,filepath)
-            neighborAnalyser(df, filepath)
+            neighborCostAnalyser(df, filepath)
+
 
 
 
