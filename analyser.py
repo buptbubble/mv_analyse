@@ -216,7 +216,7 @@ def neighborCostAnalyser(df,filepath):
     cusize = df.loc[0]['cusize']
     seqName = filepath.split('\\')[-2]
     for step in range(20):
-        multiFactor = 0.5+0.1*step
+        multiFactor = 0.5+0.4*step
         multiFactorList.append(multiFactor)
         df_costLessLA = df_LAexist[df_LAexist['mergeCost'] < multiFactor * df_LAexist['aveLAcost']]
         df_realMerge = df_costLessLA[df_costLessLA['merFlag'] == 1]
