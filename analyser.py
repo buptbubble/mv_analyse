@@ -5,9 +5,10 @@ import pandas as pd
 import math
 from matplotlib import pyplot as plt
 import copy
+import numpy as np
 
-datapath = '.\data\costdata'
-picsfolder = '.\pics'
+datapath = '.\data\costdata_paper'
+picsfolder = '.\_pics'
 
 def getRatio(df1, df2):
     rate = df1.shape[0]*1.0/df2.shape[0]
@@ -216,7 +217,7 @@ def neighborCostAnalyser(df,filepath):
     cusize = df.loc[0]['cusize']
     seqName = filepath.split('\\')[-2]
     for step in range(20):
-        multiFactor = 0.5+0.4*step
+        multiFactor = 0.5+0.1*step
         multiFactorList.append(multiFactor)
         df_costLessLA = df_LAexist[df_LAexist['mergeCost'] < multiFactor * df_LAexist['aveLAcost']]
         df_realMerge = df_costLessLA[df_costLessLA['merFlag'] == 1]
@@ -238,7 +239,7 @@ def neighborCostAnalyser(df,filepath):
     savename = seqName+str(cusize)+'.png'
 
     plt.title(titleText)
-    plt.legend()
+    plt.legend(loc=4)
     plt.savefig(os.path.join(picsfolder, savename))
 
 
@@ -250,8 +251,65 @@ def neighborCostAnalyser(df,filepath):
 
     pass
 
+def drawPicForPaper():
+    cusize = [8, 16]
+    picIdx = [211,212]
+    for i,size in enumerate(cusize):
+        print 'current size:', size
+        plt.subplot(picIdx[i])
+        for df, filepath in loadDataBySize(size):
+            df_LAexist = df[(df['NormalMC'] == 1) & (df['leftExist'] == 1) & (df['rightExist'] == 1) & (df['mergeCost'] != -1)]
+            templist = copy.deepcopy(list(((df_LAexist['leftCost'] + df_LAexist['rightCost']) / 2).values))
+            df_LAexist['aveLAcost'] = templist
+
+            df_totalMerge = df_LAexist[df_LAexist['merFlag'] == 1]
+
+            mergedRatioList = []
+            precisionRatioList = []
+            recallRatioList = []
+            multiFactorList = []
+
+            cusize = df.loc[0]['cusize']
+            seqName = filepath.split('\\')[-2]
+            for step in range(20):
+                multiFactor = 0.5 + 0.1 * step
+                multiFactorList.append(multiFactor)
+                df_costLessLA = df_LAexist[df_LAexist['mergeCost'] < multiFactor * df_LAexist['aveLAcost']]
+                df_realMerge = df_costLessLA[df_costLessLA['merFlag'] == 1]
+
+                rate = getRatio(df_LAexist, df)
+                # print rate,'\tLeft and right are exist, current merge cost != -1, process normal'
+
+                mergedRatio = getRatio(df_costLessLA, df)
+                mergedRatioList.append(mergedRatio)
+                precisionRatio = getRatio(df_realMerge, df_costLessLA)
+                precisionRatioList.append(precisionRatio)
+                recallRatio = getRatio(df_realMerge, df_totalMerge)
+                recallRatioList.append(recallRatio)
+            if seqName == 'RaceHorses':
+                plt.plot(multiFactorList, precisionRatioList, 'r--',lw=1, label='RaceHorses PR')
+                plt.plot(multiFactorList, recallRatioList, 'g--', lw=1,label='RaceHorses RR')
+                #plt.plot(multiFactorList, mergedRatioList, 'b-', label='Merged Block')
+            else:
+                plt.plot(multiFactorList, precisionRatioList, 'r-', lw=1,label='ParkScene PR')
+                plt.plot(multiFactorList, recallRatioList, 'g-', lw=1,label='ParkScene RR')
+                #plt.plot(multiFactorList, mergedRatioList, 'b-', label='Merged Block')
+        x_marks = np.arange(0.5,2.6,0.25)
+        ax = plt.gca()
+        ax.set_xticks(x_marks)
+        #ax.set_xlabel(r'$\alpha$')
+        if size == 8:
+            plt.title('(a)   CU size = '+str(size))
+        else:
+            plt.title('(b)   CU size = ' + str(size))
+        plt.legend(loc=4)
+        plt.grid()
+    plt.show()
+
 if __name__ == "__main__":
-    cusize = [8,16,32,64]
+    drawPicForPaper()
+    exit(0)
+    cusize = [8,16]
     #cusize = [32]
     for size in cusize:
         print 'current size:',size
